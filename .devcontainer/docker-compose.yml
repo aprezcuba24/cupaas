@@ -1,0 +1,41 @@
+version: '3'
+
+volumes:
+  local_postgres_data: {}
+  local_postgres_data_backups: {}
+
+services:
+  app: &app
+    user: vscode
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    image: cupaas
+    container_name: cupaas
+    volumes:
+      - ..:/app
+    env_file:
+      - ../.env
+    links:
+      - kafka
+      - kafka-ui
+      - db
+    command: sleep infinity
+  db:
+    image: mongo:6.0.2
+    ports:
+      - 27017:27017
+  kafka:
+    image: 'bitnami/kafka:latest'
+    environment:
+      - ALLOW_PLAINTEXT_LISTENER=yes
+  kafka-ui:
+    container_name: kafka-ui
+    image: provectuslabs/kafka-ui:latest
+    depends_on:
+      - kafka
+    ports:
+      - 8080:8080
+    environment:
+      KAFKA_CLUSTERS_0_NAME: local
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
