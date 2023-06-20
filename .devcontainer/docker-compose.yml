@@ -14,6 +14,7 @@ services:
     container_name: cupaas
     volumes:
       - ..:/app
+      - /etc/resolv.conf:/etc/resolv.conf
     env_file:
       - ../.env
     links:

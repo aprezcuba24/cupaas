@@ -26,5 +26,4 @@ load_dotenv.sh
 
 node_modules
 testing.http
-manager.py
 localmachine

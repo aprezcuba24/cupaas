@@ -27,4 +27,10 @@ RUN apt-get update \
   && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
   && rm -rf /var/lib/apt/lists/*
 
+RUN pip install pylint
+RUN pip install pip-tools
+RUN pip3 install --user pipenv
+RUN pip3 install --upgrade pip
+RUN pip3 install virtualenv
+
 WORKDIR /app
