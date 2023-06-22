@@ -1,21 +1,25 @@
 import json
-from flask import jsonify, request
-from app.kafka import kafka_producer
+from fastapi import Request
+from app.kafka import get_producer
+from app.config import KAFKA_TOPIC_GITHUB_EVENT
 from .app import app
 
 
-@app.route("/github-webhook", methods=["POST"])
-def github_webhook():
-    body = request.get_json(force=True)
+@app.post("/github-webhook")
+async def github_webhook(request: Request):
+    kafka_producer = await get_producer()
+    body = await request.json()
+    headers = request.headers
     headers = {key: value for key, value in request.headers.items()}
     data = {
         "body": body,
         "headers": headers,
     }
-    future = kafka_producer.send(
-        "github_event", json.dumps(data).encode("ascii")
-    )
-    record_metadata = future.get(timeout=10)
-    print("record_metadata =>", record_metadata)
     print("data =>", data)
-    return jsonify(message="ok")
+    try:
+        await kafka_producer.send_and_wait(
+            KAFKA_TOPIC_GITHUB_EVENT, json.dumps(data).encode("ascii")
+        )
+    finally:
+        await kafka_producer.stop()
+    return {"message": "ok"}

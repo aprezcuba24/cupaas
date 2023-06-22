@@ -1,1 +1,2 @@
-from .producer import kafka_producer
+from .producer import get_producer
+from .consumer import get_consumer
