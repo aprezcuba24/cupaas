@@ -21,7 +21,7 @@ def consumer(topic):
             try:
                 async for message in kafka_consumer:
                     value = json.loads(message.value.decode())
-                    await func(value)
+                    await func(value, *args, **kwargs)
             finally:
                 await kafka_consumer.stop()
         return wrapper

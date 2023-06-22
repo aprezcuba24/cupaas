@@ -3,8 +3,8 @@ from app.config import KAFKA_TOPIC_GITHUB_EVENT, KAFKA_TOPIC_GIT_CLONE
 
 
 @consumer(KAFKA_TOPIC_GITHUB_EVENT)
-async def github_events(data):
-    print(data)
+async def github_events(data, context):
+    print(context)
     data = {
         "git_repository": "dddd"
     }
