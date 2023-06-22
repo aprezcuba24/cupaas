@@ -1,13 +1,13 @@
 import asyncio
 from app.functions import github_events, git_clone
-from app.db import startup_db_client, shutdown_db_client
+from app.db import get_client
 
 workers = [github_events, git_clone]
 
 
 async def main():
     tasks = []
-    mongo = startup_db_client()
+    mongo, mongo_client = get_client()
     context = {
         "mongo": mongo
     }
@@ -20,7 +20,7 @@ async def main():
         for t in tasks:
             t.cancel()
     finally:
-        shutdown_db_client(mongo)
+        mongo_client.close()
 
 if __name__ == "__main__":
     asyncio.run(main())

@@ -1,10 +1,8 @@
 from pymongo import MongoClient
-from app.config import MONGO_URL
+from app.config import MONGO_URL, MONGO_DABASE
 
 
-def startup_db_client():
-    return MongoClient(MONGO_URL)
-
-
-def shutdown_db_client(mongodb_client):
-    mongodb_client.close()
+def get_client():
+    client = MongoClient(MONGO_URL)
+    database = client[MONGO_DABASE]
+    return database, client
