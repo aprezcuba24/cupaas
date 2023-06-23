@@ -13,15 +13,17 @@ async def send_message(topic, data, producer=None):
         await producer.stop()
 
 
-def consumer(topic):
+def pipe(topic_input, topic_output=None):
     def decorator(func):
         async def wrapper(*args, **kwargs):
-            print(f"{topic} started.")
-            kafka_consumer = await get_consumer(topic)
+            print(f"{topic_input} started.")
+            kafka_consumer = await get_consumer(topic_input)
             try:
                 async for message in kafka_consumer:
                     value = json.loads(message.value.decode())
-                    await func(value, *args, **kwargs)
+                    data = await func(value, *args, **kwargs)
+                    if data and topic_output:
+                        await send_message(topic_output, data)
             finally:
                 await kafka_consumer.stop()
         return wrapper

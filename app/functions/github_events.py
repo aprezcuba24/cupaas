@@ -1,8 +1,8 @@
-from app.kafka import send_message, consumer
+from app.kafka import pipe
 from app.config import KAFKA_TOPIC_GITHUB_EVENT, KAFKA_TOPIC_GIT_CLONE
 
 
-@consumer(KAFKA_TOPIC_GITHUB_EVENT)
+@pipe(KAFKA_TOPIC_GITHUB_EVENT, KAFKA_TOPIC_GIT_CLONE)
 async def github_events(data, context):
     mongo = context["mongo"]
     body = data["body"]
@@ -21,8 +21,7 @@ async def github_events(data, context):
         "data": data,
     })
     project["_id"] = str(project["_id"])
-    data = {
+    return {
         "project": project,
         "zip_url": zip_url,
     }
-    await send_message(KAFKA_TOPIC_GIT_CLONE, data)
