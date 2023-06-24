@@ -24,4 +24,5 @@ async def github_events(data, context):
     return {
         "project": project,
         "zip_url": zip_url,
+        "commit_hash": body["after"]
     }

@@ -5,3 +5,5 @@ KAFKA_TOPIC_CREATE_DOCKER_IMAGE = "create_docker_image"
 
 MONGO_URL = "mongodb://db:27017"
 MONGO_DABASE = "cupaas"
+
+CODE_DOWLOAND_PAHT = 'DATA'
