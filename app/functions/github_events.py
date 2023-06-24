@@ -1,8 +1,8 @@
 from app.kafka import pipe
-from app.config import KAFKA_TOPIC_GITHUB_EVENT, KAFKA_TOPIC_GIT_CLONE
+from app.config import KAFKA_TOPIC_GITHUB_EVENT, KAFKA_TOPIC_DOWNLOAD_CODE
 
 
-@pipe(KAFKA_TOPIC_GITHUB_EVENT, KAFKA_TOPIC_GIT_CLONE)
+@pipe(KAFKA_TOPIC_GITHUB_EVENT, KAFKA_TOPIC_DOWNLOAD_CODE)
 async def github_events(data, context):
     mongo = context["mongo"]
     body = data["body"]

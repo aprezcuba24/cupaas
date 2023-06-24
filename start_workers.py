@@ -1,8 +1,8 @@
 import asyncio
-from app.functions import github_events, git_clone, create_docker_image
+from app.functions import github_events, download_code, validate_configuration
 from app.db import get_client
 
-workers = [github_events, git_clone, create_docker_image]
+workers = [github_events, download_code, validate_configuration]
 
 
 async def main():

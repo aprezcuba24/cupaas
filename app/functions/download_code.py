@@ -3,8 +3,8 @@ import os
 import shutil
 from app.kafka import pipe
 from app.config import (
-    KAFKA_TOPIC_GIT_CLONE,
-    KAFKA_TOPIC_CREATE_DOCKER_IMAGE,
+    KAFKA_TOPIC_DOWNLOAD_CODE,
+    KAFKA_TOPIC_VALIDATE_CONFIGURATION,
     CODE_DOWLOAND_PAHT
 )
 from zipfile import ZipFile
@@ -17,9 +17,9 @@ def download_url(url, save_path, chunk_size=128):
             fd.write(chunk)
 
 
-@pipe(KAFKA_TOPIC_GIT_CLONE, KAFKA_TOPIC_CREATE_DOCKER_IMAGE)
-async def git_clone(data, **kwargs):
-    print("git_clone", data)
+@pipe(KAFKA_TOPIC_DOWNLOAD_CODE, KAFKA_TOPIC_VALIDATE_CONFIGURATION)
+async def download_code(data, **kwargs):
+    print("download_code", data)
     commit_hash = data["commit_hash"]
     project_folder = f"{CODE_DOWLOAND_PAHT}/{commit_hash}"
     folder = f"{project_folder}_downoload"
