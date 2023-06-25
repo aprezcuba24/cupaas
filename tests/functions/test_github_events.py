@@ -1,6 +1,5 @@
 import pytest
 from unittest.mock import patch, MagicMock, Mock
-from app.config import KAFKA_TOPIC_GITHUB_EVENT, KAFKA_TOPIC_DOWNLOAD_CODE
 from tests.util import get_mock_pipe
 
 
@@ -32,16 +31,11 @@ def get_mock_mongo(project):
 
 @pytest.mark.asyncio
 async def test_github_events_project_not_foud():
-    mock_pipe = get_mock_pipe(
-        data,
-        KAFKA_TOPIC_GITHUB_EVENT,
-        KAFKA_TOPIC_DOWNLOAD_CODE,
-    )
-    with patch("app.kafka.pipe", mock_pipe):
+    with patch("app.kafka.pipe", get_mock_pipe()):
         # I need to import the function here to be able to mock the pipe.
         from app.functions import github_events
         mock_mongo, mock_find_one, _ = get_mock_mongo(None)
-        result = await github_events(context={
+        result = await github_events(data, context={
             "mongo": mock_mongo,
         })
         assert result is None
@@ -54,19 +48,14 @@ async def test_github_events_project_not_foud():
 
 @pytest.mark.asyncio
 async def test_github_events_project_foud():
-    mock_pipe = get_mock_pipe(
-        data,
-        KAFKA_TOPIC_GITHUB_EVENT,
-        KAFKA_TOPIC_DOWNLOAD_CODE,
-    )
-    with patch("app.kafka.pipe", mock_pipe):
+    with patch("app.kafka.pipe", get_mock_pipe()):
         # I need to import the function here to be able to mock the pipe.
         from app.functions import github_events
         project = {
             "_id": "project_id",
         }
         mock_mongo, mock_find_one, mock_insert_one = get_mock_mongo(project)
-        result = await github_events(context={
+        result = await github_events(data, context={
             "mongo": mock_mongo,
         })
         zip_url = f"{repoitory_url}/archive/{repoitory_ref}.zip"
