@@ -2,5 +2,7 @@
     "[python]": {
         "editor.defaultFormatter": "ms-python.black-formatter"
     },
-    "python.formatting.provider": "none"
+    "python.formatting.provider": "none",
+    "python.pythonPath": ".venv/bin/python",
+    "python.linting.pylintPath": ".venv/bin/pylint"
 }
