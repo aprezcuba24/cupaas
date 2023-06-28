@@ -22,6 +22,8 @@ async def download_code(data, **kwargs):
     print("download_code", data)
     commit_hash = data["commit_hash"]
     project_folder = f"{CODE_DOWLOAND_PAHT}/{commit_hash}"
+    if os.path.isdir(project_folder):
+        shutil.rmtree(project_folder)
     folder = f"{project_folder}_downoload"
     zip_file = f"{folder}.zip"
     download_url(data["zip_url"], zip_file)

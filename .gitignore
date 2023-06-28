@@ -29,3 +29,4 @@ testing.http
 localmachine
 my_tests.py
 DATA
+only_for_testing
