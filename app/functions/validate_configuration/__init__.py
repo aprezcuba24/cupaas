@@ -46,8 +46,9 @@ def _create_kubernate_file(data, config):
     project_code = data["project_code"]
     cupaas_folder = f"{project_code}/_cupaas"
     os.mkdir(cupaas_folder)
-    with open(f"{cupaas_folder}/.app.yml", "w") as f:
+    with open(f"{cupaas_folder}/app.yml", "w") as f:
         f.write(config)
+    return cupaas_folder
 
 
 @pipe(KAFKA_TOPIC_VALIDATE_CONFIGURATION, KAFKA_TOPIC_CREATE_DOCKER_IMAGE)
@@ -55,5 +56,10 @@ async def validate_configuration(data, **kwargs):
     print("validate_configuration", data)
     yml_data = _get_yml_data(data)
     config, image_name, docker_port = _get_configuration(data, yml_data)
-    _create_kubernate_file(data, config)
-    return {**data, **{"image_name": image_name, "docker_port": docker_port}}
+    cupaas_folder = _create_kubernate_file(data, config)
+    return {**data, **{
+        "image_name": image_name,
+        "docker_port": docker_port,
+        "yml_data": yml_data,
+        "cupaas_folder": cupaas_folder,
+    }}

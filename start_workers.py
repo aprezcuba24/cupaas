@@ -1,6 +1,10 @@
 import asyncio
 from app.functions import (
-    github_events, download_code, validate_configuration, create_docker_image
+    github_events,
+    download_code,
+    validate_configuration,
+    create_docker_image,
+    upload_docker_image,
 )
 from app.db import get_client
 
@@ -9,6 +13,7 @@ workers = [
     download_code,
     validate_configuration,
     create_docker_image,
+    upload_docker_image,
 ]
 
 
