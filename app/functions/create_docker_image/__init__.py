@@ -7,8 +7,9 @@ from . import runtimes
 
 
 @pipe(KAFKA_TOPIC_CREATE_DOCKER_IMAGE, KAFKA_TOPIC_UPLOAD_DOCKER_IMAGE)
-async def create_docker_image(data, **kargs):
+async def create_docker_image(data, context):
     print("create_docker_image =>", data)
+    logging = context["logging"]
     yml_data = data["yml_data"]
     cupaas_folder = data["cupaas_folder"]
     runtime, version = yml_data["runtime"].split(":")
@@ -22,5 +23,5 @@ async def create_docker_image(data, **kargs):
     image_name = data["image_name"]
     command = f"docker build -f {docker_file} -t {image_name} ."
     for item in run_command(command):
-        print(item)
+        logging(item)
     return data

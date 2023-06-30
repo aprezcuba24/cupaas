@@ -7,6 +7,7 @@ from app.functions import (
     upload_docker_image,
 )
 from app.db import get_client
+from app.logging import logging
 
 workers = [
     github_events,
@@ -21,7 +22,8 @@ async def main():
     tasks = []
     mongo, mongo_client = get_client()
     context = {
-        "mongo": mongo
+        "mongo": mongo,
+        "logging": logging,
     }
     try:
         async with asyncio.TaskGroup() as tg:
