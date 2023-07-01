@@ -5,6 +5,8 @@ from app.functions import (
     validate_configuration,
     create_docker_image,
     upload_docker_image,
+    upload_to_kubernates,
+    get_final_url,
 )
 from app.db import get_client
 from app.logging import logging
@@ -15,6 +17,8 @@ workers = [
     validate_configuration,
     create_docker_image,
     upload_docker_image,
+    upload_to_kubernates,
+    get_final_url,
 ]
 
 

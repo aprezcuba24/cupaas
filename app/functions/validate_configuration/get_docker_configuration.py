@@ -23,7 +23,7 @@ apiVersion: v1
 kind: Service
 metadata:
   namespace: {namespace}
-  name: backend-service
+  name: {service_name}
 spec:
   type: NodePort
   selector:
@@ -47,9 +47,11 @@ def get_docker_configuration(namespace, docker_name, version, env):
     image_name = f"{docker_name}:{version}"
     port = '5000'
     env["PORT"] = port
+    service_name = "backend-service"
     return template.format(
         namespace=namespace,
         docker_name=image_name,
         port=port,
         env=yaml.dump({"data": env}),
-    ), image_name, port
+        service_name=service_name,
+    ), image_name, port, service_name
