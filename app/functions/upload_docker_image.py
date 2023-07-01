@@ -4,7 +4,6 @@ from app.kafka import pipe
 
 @pipe
 async def upload_docker_image(data, context):
-    print("===> upload_docker_image", data)
     logging = context["logging"]
     image_name = data["image_name"]
     command_text = f"minikube image load  {image_name}"

@@ -5,7 +5,6 @@ from . import runtimes
 
 @pipe
 async def create_docker_image(data, context):
-    print("create_docker_image =>", data)
     logging = context["logging"]
     yml_data = data["yml_data"]
     project_code = data["project_code"]

@@ -49,7 +49,6 @@ def _create_kubernate_file(data, config):
 
 @pipe
 async def validate_configuration(data, **kwargs):
-    print("validate_configuration", data)
     yml_data = _get_yml_data(data)
     config, image_name, docker_port, namespace, service_name = _get_configuration(
         data, yml_data

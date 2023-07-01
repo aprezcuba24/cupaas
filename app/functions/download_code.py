@@ -15,7 +15,6 @@ def download_url(url, save_path, chunk_size=128):
 
 @pipe
 async def download_code(data, **kwargs):
-    print("download_code", data)
     commit_hash = data["commit_hash"]
     project_folder = f"{CODE_DOWLOAND_PAHT}/{commit_hash}"
     if os.path.isdir(project_folder):

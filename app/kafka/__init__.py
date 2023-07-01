@@ -1,4 +1,5 @@
 import json
+import yaml
 import functools
 from .producer import get_producer
 from .consumer import get_consumer
@@ -11,6 +12,17 @@ async def send_message(topic, data, producer=None):
     finally:
         await producer.stop()
 
+tmpl = '''
+**********************************
+{topic}
+--------------
+{data}
+'''
+
+
+def _print_log(topic, data):
+    return tmpl.format(topic=topic, data=yaml.dump(data))
+
 
 def pipe(func):
     @functools.wraps(func)
@@ -22,6 +34,7 @@ def pipe(func):
         try:
             async for message in kafka_consumer:
                 value = json.loads(message.value.decode())
+                print(_print_log(topic_input, value))
                 data = await func(value, *args, **kwargs)
                 if data and topic_output:
                     await send_message(topic_output, data)

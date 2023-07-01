@@ -4,7 +4,6 @@ from app.kafka import pipe
 
 @pipe
 async def upload_to_kubernates(data, context):
-    print("===> upload_to_kubernates", data)
     logging = context["logging"]
     cupaas_ks8 = data["cupaas_ks8"]
     command_text = f"kubectl apply -f {cupaas_ks8}"
