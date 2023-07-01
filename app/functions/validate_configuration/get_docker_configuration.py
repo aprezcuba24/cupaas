@@ -1,6 +1,6 @@
 import yaml
 
-template = '''
+template = """
 apiVersion: v1
 kind: Pod
 metadata:
@@ -40,18 +40,23 @@ metadata:
   namespace: {namespace}
   name: backend-config-env
 {env}
-'''
+"""
 
 
 def get_docker_configuration(namespace, docker_name, version, env):
     image_name = f"{docker_name}:{version}"
-    port = '5000'
+    port = "5000"
     env["PORT"] = port
     service_name = "backend-service"
-    return template.format(
-        namespace=namespace,
-        docker_name=image_name,
-        port=port,
-        env=yaml.dump({"data": env}),
-        service_name=service_name,
-    ), image_name, port, service_name
+    return (
+        template.format(
+            namespace=namespace,
+            docker_name=image_name,
+            port=port,
+            env=yaml.dump({"data": env}),
+            service_name=service_name,
+        ),
+        image_name,
+        port,
+        service_name,
+    )

@@ -1,12 +1,9 @@
-from app import run_command
+from app import command
 from app.kafka import pipe
-from app.config import (
-    KAFKA_TOPIC_CREATE_DOCKER_IMAGE, KAFKA_TOPIC_UPLOAD_DOCKER_IMAGE
-)
 from . import runtimes
 
 
-@pipe(KAFKA_TOPIC_CREATE_DOCKER_IMAGE, KAFKA_TOPIC_UPLOAD_DOCKER_IMAGE)
+@pipe
 async def create_docker_image(data, context):
     print("create_docker_image =>", data)
     logging = context["logging"]
@@ -25,7 +22,7 @@ async def create_docker_image(data, context):
     with open(docker_file, "w") as f:
         f.write(template)
     image_name = data["image_name"]
-    command = f"docker build {project_code} -t {image_name} -f {docker_file}"
-    for item in run_command(command):
+    command_text = f"docker build {project_code} -t {image_name} -f {docker_file}"
+    for item in command.run(command_text):
         logging(item)
     return data

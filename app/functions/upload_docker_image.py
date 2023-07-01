@@ -1,16 +1,13 @@
-from app import run_command
+from app import command
 from app.kafka import pipe
-from app.config import (
-    KAFKA_TOPIC_UPLOAD_DOCKER_IMAGE, KAFKA_TOPIC_UPLOAD_TO_KUBERNATES
-)
 
 
-@pipe(KAFKA_TOPIC_UPLOAD_DOCKER_IMAGE, KAFKA_TOPIC_UPLOAD_TO_KUBERNATES)
+@pipe
 async def upload_docker_image(data, context):
     print("===> upload_docker_image", data)
     logging = context["logging"]
     image_name = data["image_name"]
-    command = f"minikube image load  {image_name}"
-    for item in run_command(command):
+    command_text = f"minikube image load  {image_name}"
+    for item in command.run(command_text):
         logging(item)
     return data

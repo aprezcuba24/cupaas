@@ -2,7 +2,7 @@ from pathlib import Path
 from app.config import INPUT_PIPE, OUTPUT_PIPE
 
 
-def run_command(command):
+def run(command):
     input_fifo_path = Path(INPUT_PIPE)
     input_fifo_path.write_text(command)
     with open(OUTPUT_PIPE) as fifo:

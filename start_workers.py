@@ -11,7 +11,7 @@ from app.functions import (
 from app.db import get_client
 from app.logging import logging
 
-workers = [
+pipeline = [
     github_events,
     download_code,
     validate_configuration,
@@ -20,6 +20,14 @@ workers = [
     upload_to_kubernates,
     get_final_url,
 ]
+
+
+def _get_topics(index):
+    topic_input = pipeline[index].__name__
+    topic_output = (
+        pipeline[index + 1].__name__ if index + 1 < len(pipeline) else None
+    )
+    return topic_input, topic_output
 
 
 async def main():
@@ -31,8 +39,13 @@ async def main():
     }
     try:
         async with asyncio.TaskGroup() as tg:
-            for method in workers:
-                t = tg.create_task(method(context=context))
+            for index, method in enumerate(pipeline):
+                topic_input, topic_output = _get_topics(index)
+                t = tg.create_task(method(
+                    topic_input=topic_input,
+                    topic_output=topic_output,
+                    context=context,
+                ))
                 tasks.append(t)
     except asyncio.exceptions.CancelledError:
         for t in tasks:

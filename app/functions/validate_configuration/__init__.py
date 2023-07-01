@@ -1,9 +1,6 @@
 import yaml
 import os
 from app.kafka import pipe
-from app.config import (
-    KAFKA_TOPIC_VALIDATE_CONFIGURATION, KAFKA_TOPIC_CREATE_DOCKER_IMAGE
-)
 from .get_namespace import get_namespace
 from .get_docker_configuration import get_docker_configuration
 from . import services
@@ -50,17 +47,22 @@ def _create_kubernate_file(data, config):
     return cupaas_ks8
 
 
-@pipe(KAFKA_TOPIC_VALIDATE_CONFIGURATION, KAFKA_TOPIC_CREATE_DOCKER_IMAGE)
+@pipe
 async def validate_configuration(data, **kwargs):
     print("validate_configuration", data)
     yml_data = _get_yml_data(data)
-    config, image_name, docker_port, namespace, service_name = _get_configuration(data, yml_data)
+    config, image_name, docker_port, namespace, service_name = _get_configuration(
+        data, yml_data
+    )
     cupaas_ks8 = _create_kubernate_file(data, config)
-    return {**data, **{
-        "image_name": image_name,
-        "docker_port": docker_port,
-        "yml_data": yml_data,
-        "cupaas_ks8": cupaas_ks8,
-        "namespace": namespace,
-        "service_name": service_name,
-    }}
+    return {
+        **data,
+        **{
+            "image_name": image_name,
+            "docker_port": docker_port,
+            "yml_data": yml_data,
+            "cupaas_ks8": cupaas_ks8,
+            "namespace": namespace,
+            "service_name": service_name,
+        },
+    }

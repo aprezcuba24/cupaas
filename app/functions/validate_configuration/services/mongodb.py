@@ -1,4 +1,4 @@
-template = '''
+template = """
 apiVersion: v1
 kind: Pod
 metadata:
@@ -25,18 +25,12 @@ spec:
   ports:
     - port: {port}
       targetPort: mongodb-port
-'''
+"""
 
 
 def mongodb(namespace, version):
     port = 27017
     # I am using minikube. I will see what is the url a real kubernates.
     MONGODB_URI = f"mongodb://host.minikube.internal:{port}/{namespace}_db"
-    env = {
-        "MONGODB_URI": MONGODB_URI
-    }
-    return template.format(
-        namespace=namespace,
-        version=version,
-        port=port
-    ), env
+    env = {"MONGODB_URI": MONGODB_URI}
+    return template.format(namespace=namespace, version=version, port=port), env

@@ -1,4 +1,4 @@
-template = '''
+template = """
 FROM python:{VERSION}-slim
 
 RUN pip3 install --upgrade pip
@@ -14,11 +14,11 @@ EXPOSE {PORT}
 
 ENTRYPOINT [{ENTRYPOINT}]
 
-'''
+"""
 
 
 def python(version, docker_port, data):
-    entrypoint = ",".join([f"\"{item}\"" for item in data["entrypoint"]])
+    entrypoint = ",".join([f'"{item}"' for item in data["entrypoint"]])
     return template.format(
         VERSION=version,
         ENTRYPOINT=entrypoint,
