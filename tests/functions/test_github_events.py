@@ -1,6 +1,6 @@
 import pytest
-from unittest.mock import patch, MagicMock, Mock
-from tests.util import get_mock_pipe
+from unittest.mock import MagicMock, Mock
+from app.functions import github_events
 
 
 repoitory_url = "url_repository"
@@ -31,45 +31,39 @@ def get_mock_mongo(project):
 
 @pytest.mark.asyncio
 async def test_github_events_project_not_foud():
-    with patch("app.kafka.pipe", get_mock_pipe()):
-        # I need to import the function here to be able to mock the pipe.
-        from app.functions import github_events
-        mock_mongo, mock_find_one, _ = get_mock_mongo(None)
-        result = await github_events(data, context={
-            "mongo": mock_mongo,
-        })
-        assert result is None
-        mock_find_one.assert_called_once_with({
-            "name": "project_full_name",
-            "git_source": "github",
-            "ref": "project_ref",
-        })
+    mock_mongo, mock_find_one, _ = get_mock_mongo(None)
+    result = await github_events(data, context={
+        "mongo": mock_mongo,
+    })
+    assert result is None
+    mock_find_one.assert_called_once_with({
+        "name": "project_full_name",
+        "git_source": "github",
+        "ref": "project_ref",
+    })
 
 
 @pytest.mark.asyncio
 async def test_github_events_project_foud():
-    with patch("app.kafka.pipe", get_mock_pipe()):
-        # I need to import the function here to be able to mock the pipe.
-        from app.functions import github_events
-        project = {
-            "_id": "project_id",
-        }
-        mock_mongo, mock_find_one, mock_insert_one = get_mock_mongo(project)
-        result = await github_events(data, context={
-            "mongo": mock_mongo,
-        })
-        zip_url = f"{repoitory_url}/archive/{repoitory_ref}.zip"
-        assert result == {
-            "project": project,
-            "zip_url": zip_url,
-            "commit_hash": repoitory_after,
-        }
-        mock_find_one.assert_called_once_with({
-            "name": "project_full_name",
-            "git_source": "github",
-            "ref": "project_ref",
-        })
-        mock_insert_one.assert_called_once_with({
-            "project_id": "project_id",
-            "data": data,
-        })
+    project = {
+        "_id": "project_id",
+    }
+    mock_mongo, mock_find_one, mock_insert_one = get_mock_mongo(project)
+    result = await github_events(data, context={
+        "mongo": mock_mongo,
+    })
+    zip_url = f"{repoitory_url}/archive/{repoitory_ref}.zip"
+    assert result == {
+        "project": project,
+        "zip_url": zip_url,
+        "commit_hash": repoitory_after,
+    }
+    mock_find_one.assert_called_once_with({
+        "name": "project_full_name",
+        "git_source": "github",
+        "ref": "project_ref",
+    })
+    mock_insert_one.assert_called_once_with({
+        "project_id": "project_id",
+        "data": data,
+    })

@@ -1,6 +1,6 @@
 from fastapi import Request
 from app.kafka import send_message
-from app.config import KAFKA_TOPIC_GITHUB_EVENT
+from app.functions import github_events
 from app import app
 
 
@@ -11,5 +11,5 @@ async def github_webhook(request: Request):
         "headers": {key: value for key, value in request.headers.items()},
     }
     print("data =>", data)
-    await send_message(KAFKA_TOPIC_GITHUB_EVENT, data)
+    await send_message(github_events.__name__, data)
     return {"message": "ok"}

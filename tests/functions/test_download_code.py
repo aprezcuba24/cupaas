@@ -1,6 +1,5 @@
 import pytest
 from unittest.mock import patch
-from tests.util import get_mock_pipe
 
 
 @pytest.mark.asyncio
@@ -9,7 +8,7 @@ async def test_download_code():
         "commit_hash": "commit_hash",
         "zip_url": "zip_url",
     }
-    with patch("app.kafka.pipe", get_mock_pipe()), patch(
+    with patch(
         "app.functions.download_code.download_url"
     ) as mock_download_url, patch(
         "app.functions.download_code.ZipFile"

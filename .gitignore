@@ -27,5 +27,6 @@ load_dotenv.sh
 node_modules
 testing.http
 localmachine
-DATA
 my_tests.py
+DATA
+only_for_testing
